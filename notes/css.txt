@@ -1,0 +1,74 @@
+Basic Terminology Review:
+- declaration: made up of a property and a value, ex: color: black
+- declaration block: a group of declarations inside curly braces, preceeded by a selector. ex:
+      body {
+        color: black;
+        font-family: Helvetica;
+      }
+- ruleset: a selector and declaration block
+- cascaded value: a value for a particular property applied to an element as a result of the cascade
+
+Box Model & 'border-box' Sizing
+
+- box model refers to the composition of elements on a page
+  - when you specify height/width, you're setting content size (first/inner-most "layer" of box model)
+  - padding, border, and margin will be added to specified height/width
+
+- applying "box-sizing: border-box" to an element changes the box model
+  - when you specify height/width, it applies to the entire element, including padding, border, and margin
+
+Cascade
+- the cascade is the name for the set of rules that determines how conflicts are resolved
+- the cascade unpacked:
+  1. stylesheet origin: where styles come from. styles are applied in conjuction with the browser's default styles
+    - stylesheets you add aren't the only ones applied. there are types, or origins, of stylesheets
+      1. author styles: the ones you write
+      2. user agent styles: the browser's defaults (have lower priority).. ex: h1-h6, and p tags get margin top/bottom
+  2. selector specificity: which selectors take precedence over which
+    - if conflicting declarations can't be resolved bsed on their origin, the browser then tries to resolve them by looking at their specificity
+    - specificity is evaluated by the browser in two parts:
+      1. styles applied inline
+        - effectively scoped declarations, which override any applied in stylesheets
+      2. styles applied using a selector
+    - the rules:
+      1. if a selector has more IDs, it wins
+      2. if that results in a tie, the selector with the most classes wins
+      3. if that results in a tie, the selector with the most tag names wins
+  3. source order: order in which styles are declared in the stylesheet
+- resolving conflicts:
+
+              yes                                     no                              no                                               no
+ (conflict?) ----> (different origin or importance?) ----> (is one an inline scope?) ----> (do selectors have different specificity?) ----> use last declaration
+                               |                                     |                                         |
+                               | yes                                 | yes                                     | yes
+                               |                                     |                                         |
+       use declaration with higher priority origin          use inline declaration            use declaration with high specificity
+
+Two Rules of Thumb:
+1. don't use IDs in your selector. when you need to override the selector, you often don't have another meaningful ID, so you end up adding classes
+2. don't use !important. this is even more difficult to override than ID
+
+Inheritance & inherit keyword
+- the last way an element can receive a style. if an element has no cascaded value for a given property, it may inherit one from an ancestor element
+- if you want inheritance to take place but a cascaded value is preventing it, use the inherit keyword
+- the inherit keyword can be used to force inheritance of a property not normally inherited
+
+initial keyword
+- isn't supported in any version of IE or Opera Mini
+- aka default value. use keyword to reset value of property
+- the same can sometimes be achieved with the value auto. auto isn't the default value for all properties, sometimes not even valid
+
+- shorthand properties can sometimes override styles, and usually isn't obvious
+- shorthands include ones that use TRouBLe (top, right, bottom, left), ex: margin, padding
+
+key points so far:
+- keep selector specificity under control
+- don't confuse cascade with inheritance
+- certain properties are inherited, including those for texts, lists, and table borders
+- don't confuse initial and auto values
+- stay out TRouBLe with shorthand properties
+
+-------
+
+Working With Relative Units
+-

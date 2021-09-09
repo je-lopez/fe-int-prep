@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Splitty Clone</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- this component is originally not responsive -->
+    <!-- while always rendered, the text shown depends on an existing timer. hard-coded values are just defaults -->
+    <aside>
+      <section id="category-section">
+        <!-- category/game name updated when user creates new timer -->
+        <span id="category-name">-</span>
+
+        <!-- sets updated after a set of splits is completed -->
+        <span id="category-sets">0</span>
+      </section>
+
+      <!-- rendered after user creates splits/new timer -->
+      <section id="splits-section">
+        <span>-</span>
+        <span>-</span>
+      </section>
+
+      <!-- includes stats and the actual timer -->
+      <section id="timer-section">
+        <!-- stats -->
+        <div class="timer-stats">
+          <span>Previous segment</span>
+          <span>-</span>
+        </div>
+        <div class="timer-stats">
+          <span>Sum of Bests</span>
+          <span>-</span>
+        </div>
+
+        <!-- timer -->
+        <div id="timer">0:00.<small id="timer-milliseconds">0</small></div>
+      </section>
+    </aside>
+
+    <!-- dependent on app state "view"; initial is "LANDING" -->
+    <main id="main-content" ></main>
+  </div>
+
+  <script type="text/javascript" src="index.js"></script>
+</body>
+</html>
