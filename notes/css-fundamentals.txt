@@ -7,6 +7,8 @@ Basic Terminology Review:
       }
 - ruleset: a selector and declaration block
 - cascaded value: a value for a particular property applied to an element as a result of the cascade
+- computed value: values declared using relative units are evaluated by the browser to an absolute unit
+- CSS variables are sometimes referred to as custom properties and start with --
 
 Box Model & 'border-box' Sizing
 
@@ -66,9 +68,47 @@ key points so far:
 - don't confuse cascade with inheritance
 - certain properties are inherited, including those for texts, lists, and table borders
 - don't confuse initial and auto values
-- stay out TRouBLe with shorthand properties
+- stay out TRouBLe with shorthand properties (LoVe HAte)
 
 -------
 
-Working With Relative Units
--
+Relative Units
+- the most familiar unit is px, which is an absolute (not relative) unit
+- em and rem are relative units, meaning that the value changes based on external factors
+- CSS brings a late-binding of styles: content and styles aren't pulled together until after the authoring of both is complete
+
+ems
+- em, the most common relative unit, is a measure used in typography, referring to a specified font size
+  - 1 em means the font size of the current element; the exact value varies depending ont he element you're applying it to
+    - ex: a div with 16px font size and padding of 1 em would result in the padding also being 16px
+  - convenient when setting properites like padding, height, width, or border-radius, because these will scale evenly with the element if it inherits different font sizes'
+    - this is a powerful feature. you're able to define the size of an element, then scale the entire thing up or down with a single declaration that changes font size
+  - when used with font-size, as in "font-size: 1.2em;", the calculation is based on the inherited font size: desired size / inherited size = desired size in em
+  - shrinking text can occur when you nest lists several levels deep and apply an em-based font size to each level. stick with rems for font size
+
+rems
+- rem, short for root em, is sized relative to the root element vs the current element like em
+- no matter where you specify something like "font-size: 1.2rem", it'll compute to the same value
+- you can specify the root font size using the pseudo-class :root (document class). set it using em, then children elements with rem to make it relative to the set value
+- tip: when in doubt, use rems for font size, px for borders, an ems for most others
+
+- when you use a unitless number, that declared value is inherited, meaning its computed value is recalculated for each inheriting child element
+extra:
+- to set a variable: :root { --main-font: Helvetica, Arial, sans-serif; }
+- to use a variable: p { font-family: var(--main-font) }
+- for up-to-date support information on less-known browsers, check "Can I Use" at http://caniuse.com/
+
+Responsive
+- using calc() for font size
+  - use it to define font-size in ems and vh units
+  - doing so will make the font scale smoothly, unlike breakpoints
+  - typically add to root like, :root { font-size: calc(0.5em + 1vh) } ===> give you base font of 11.75px on iphone 6 and 20px on 1200px browser windows
+
+Accessibility
+- use relative units or percentages for font sizes. placement of a default font size is harder and depending on which level, it can be permanent. helps with those who are vision-impaired
+
+key points so far:
+- embrace the use of relative units, allowing the page's structure to determine the meaning of your styles
+- use rems for font size, but selective use ems for simple scaling of components
+- you can make your entire page scale responsively without any media queries
+- use unitless values when specifying line height
