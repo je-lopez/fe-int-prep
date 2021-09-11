@@ -93,10 +93,12 @@ rems
 - tip: when in doubt, use rems for font size, px for borders, an ems for most others
 
 - when you use a unitless number, that declared value is inherited, meaning its computed value is recalculated for each inheriting child element
+
 extra:
 - to set a variable: :root { --main-font: Helvetica, Arial, sans-serif; }
 - to use a variable: p { font-family: var(--main-font) }
 - for up-to-date support information on less-known browsers, check "Can I Use" at http://caniuse.com/
+- use Autoprefixer to parse CSS and output a new file with all the relevant prefixes added and  where necessary
 
 Responsive
 - using calc() for font size
@@ -112,3 +114,12 @@ key points so far:
 - use rems for font size, but selective use ems for simple scaling of components
 - you can make your entire page scale responsively without any media queries
 - use unitless values when specifying line height
+
+// todo: add intro to layout --using floats etc
+
+Flexbox
+- turn an element into a flex container by setting "display: flex"
+- by default, the items align in a row, so from left to right
+- the container fills the width like a block element, but the items not necessarily
+- flex is a shorthand for flex-grow, flex-shrink, and flex-basis. defualt value for shrink is 1 and basis is 0%
+  - flex-basis: defines a sort of starting point for the size of an element -an initial "main size"
