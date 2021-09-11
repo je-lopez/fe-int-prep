@@ -1,3 +1,58 @@
-* {
+/* global box-sizing fix */
+:root {
   box-sizing: border-box;
+}
+
+/* ...continued, global box-sizing fix */
+*,
+::before,
+::after {
+  box-sizing: inherit;
+  margin: 0;
+}
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+/* body * + * {
+  margin-top: 1.5em; global margin
+} */
+
+/* double-container to center page contents */
+.container {
+  height: 100vh;
+  max-width: 100hz;
+  margin: 0 auto;
+  display: flex;
+}
+
+aside {
+  flex: 4;
+  color: #999;
+  background-color: #121212;
+  display: flex;
+  flex-direction: column;
+}
+
+aside > .aside-category {
+  border-bottom: 1px solid rgba(153, 153, 153, 0.3);
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+aside > .aside-splits {
+  flex: 3;
+  border-bottom: 1px solid rgba(153, 153, 153, 0.3);
+}
+
+aside > .aside-timer {
+  flex: 16;
+}
+
+main {
+  flex: 19;
+  border: 1px solid red;
 }

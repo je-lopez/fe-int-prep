@@ -8,26 +8,25 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="app">
-    <!-- this component is originally not responsive -->
-    <!-- while always rendered, the text shown depends on an existing timer. hard-coded values are just defaults -->
-    <aside>
-      <section id="category-section">
-        <!-- category/game name updated when user creates new timer -->
-        <span id="category-name">-</span>
+  <div class="container">
+    <!-- hard-coded values are defaults. updated when timer is created -->
+    <aside id="aside">
+      <div class="aside-category">
+        <!-- category/game name updated when timer is created -->
+        <span class="aside-category-name">-</span>
 
-        <!-- sets updated after a set of splits is completed -->
-        <span id="category-sets">0</span>
-      </section>
+        <!-- sets updated af  -->
+        <span class="aside-category-sets">0</span>
+      </div>
 
-      <!-- rendered after user creates splits/new timer -->
-      <section id="splits-section">
+      <!-- splits -->
+      <div class="aside-splits">
         <span>-</span>
         <span>-</span>
-      </section>
+      </div>
 
-      <!-- includes stats and the actual timer -->
-      <section id="timer-section">
+      <!-- includes quick stats and the actual timer -->
+      <div class="aside-timer">
         <!-- stats -->
         <div class="timer-stats">
           <span>Previous segment</span>
@@ -40,12 +39,12 @@
 
         <!-- timer -->
         <div id="timer">0:00.<small id="timer-milliseconds">0</small></div>
-      </section>
+      </div>
     </aside>
 
     <!-- dependent on app state "view"; initial is "LANDING" -->
-    <main id="main-content" ></main>
-  </div>
+    <main id="main"></main>
+  </div> <!-- end of container -->
 
   <script type="text/javascript" src="index.js"></script>
 </body>
