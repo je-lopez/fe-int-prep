@@ -1,0 +1,20 @@
+1. how browsers function at a high level
+
+  2. DNS look ups
+  3. TCP/IP
+  4. socket connections
+
+5. security
+  - use closures to emulate private methods. it provides privacy and state throughout lifetime of app
+
+6. Performance
+  - the module pattern is good for performance. it minifies very well. using loose augmentation allows easy non-blocking parallel downloads
+  - loose augmentation...one of the best things we can do for performance is load scripts asynchronously. we can create flexible multi-part modules than can load themselves in any order with loose augmentation
+    - initialization might be a bit slower, but worth the trade off. run-time performance shouldn't be affected
+    ex. each file should have the following structure:
+
+    var MODULE = (function (my) {
+      // add capabilities...
+
+        return my;
+    }(MODULE || {}));
