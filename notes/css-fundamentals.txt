@@ -81,7 +81,7 @@ ems
 - em, the most common relative unit, is a measure used in typography, referring to a specified font size
   - 1 em means the font size of the current element; the exact value varies depending ont he element you're applying it to
     - ex: a div with 16px font size and padding of 1 em would result in the padding also being 16px
-  - convenient when setting properites like padding, height, width, or border-radius, because these will scale evenly with the element if it inherits different font sizes'
+  - convenient when setting properties like padding, height, width, or border-radius, because these will scale evenly with the element if it inherits different font sizes'
     - this is a powerful feature. you're able to define the size of an element, then scale the entire thing up or down with a single declaration that changes font size
   - when used with font-size, as in "font-size: 1.2em;", the calculation is based on the inherited font size: desired size / inherited size = desired size in em
   - shrinking text can occur when you nest lists several levels deep and apply an em-based font size to each level. stick with rems for font size
