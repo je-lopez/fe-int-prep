@@ -123,3 +123,15 @@ Flexbox
 - the container fills the width like a block element, but the items not necessarily
 - flex is a shorthand for flex-grow, flex-shrink, and flex-basis. defualt value for shrink is 1 and basis is 0%
   - flex-basis: defines a sort of starting point for the size of an element -an initial "main size"
+- TODO: add remaining
+
+key points so far:
+- use flexbox for versatile, easy-to-control layout of page content
+- Autoprefixer can simplify flexbox support for older browsers
+- use flex to specify almost any imaginable combination of flex item sizes
+- use nested flexboxes to piece together more complicated layouts adn to fill the heights of naturally sized boxes
+- flexbox automatically creates columns of equal height
+- use align-items or align-self to vertically center a flex item inside its flex container
+
+Grid Layout Module
+- the CSS grid lets you define a two-dimensional layout of columns and rows, and then place elements within the grid
