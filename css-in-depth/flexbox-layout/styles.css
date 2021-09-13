@@ -115,3 +115,39 @@ body * + * {
   padding: 0.5em 1em;
   cursor: pointer;
 }
+
+.centered {
+  text-align: center;
+}
+
+.cost {
+  display: flex;
+  justify-content: center; /* centers on main axis */
+  align-items: center; /* centers on cross axis */
+  line-height: 0.7;
+}
+
+.cost > span {
+  margin-top: 0; /* override margin from lobotomized owl */
+}
+
+.cost-currency {
+  font-size: 2rem;
+}
+
+.cost-dollars {
+  font-size: 4rem;
+}
+
+.cost-cents {
+  font-size: 1.5rem;
+  align-self: flex-start;
+}
+
+.cta-button {
+  display: block;
+  background-color: #cc6b5a;
+  color: white;
+  padding: 0.5em 1em;
+  text-decoration: none;
+}
