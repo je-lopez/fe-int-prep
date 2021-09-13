@@ -1,102 +1,201 @@
+- all dynamic, all runtime, and has no classes. it's all just instances (objects)
+- generally speaking, JS is a synchronous, blocking, single-threaded (main thread) language
+- web workers allow you to send some process off to a separate thread (generally used for expensive processes)
+  - can NOT access the DOM. it's non-blocking, but still basically synchronous. this is an issue when a function relies on the results of multiple previous processes
+  - ^browsers allow us to run certain operations asynchronously. see features like callbacks and Promises below
+
 Scope & Closures
-  - scope refers to where variables and functions are accessible, and in what context it's being executed
-    - functions and variables have so called function scope, and can be declared at a global or local context
-  - a closure is the combination of a function and the lexical environment (surrounding state) within which that function was declared
-    - a closure gives you access to an outer function's scope from an inner function
-    - in JS, a closure is created every time a function is created, at function creation time
-    - useful because they let you associate data with a function that operates on that data
-    - useful for emulating private methods. (see below for example)
+- scope refers to where variables and functions are accessible, and in what context it's being executed
+  - functions and variables have so called function scope, and can be declared at a global or local context
+- a closure is the combination of a function and the lexical environment (surrounding state) within which that function was declared
+  - a closure gives you access to an outer function's scope from an inner function
+  - in JS, a closure is created every time a function is created, at function creation time
+  - useful because they let you associate data with a function that operates on that data
+  - useful for emulating private methods. (see below for example)
 
-2. JS Module Pattern (good for performance)
-  - closures follow this pattern
-  - anonymous closures - the fundamental construct that makes it possible
-  - IIFE (immediately invoked function expression) is an anonymous function that's executed immediately. the code lives in a closure
+JS Module Pattern (good for performance)
+- closures follow this pattern
+- anonymous closures - the fundamental construct that makes it possible
+- IIFE (immediately invoked function expression) is an anonymous function that's executed immediately. the code lives in a closure
 
-  Extensible contructs:
-  - augmentation - first, we import the module, then we add properties, then we export it
+Extensible contructs:
+- augmentation - first, we import the module, then we add properties, then we export it
+  var MODULE = (function(my) {
+    my.anotherMethod = function() {
+      // added method
+    }
+
+    return my;
+  }(MODULE));
+
+- loose augmentation: when we create flexible multi-part modules that can load themselves in any order
+  - limitation: you can't override module properties safely. also can't use module properties from other files during initialization
     var MODULE = (function(my) {
-      my.anotherMethod = function() {
-        // added method
-      }
+      // add capabilities
+
+      return my;
+    }(MODULE || {}));
+
+- tight augmentation: implies a set loading order, but allows overrides. here's a simple augmentation:
+    var MODULE = (function (my) {
+      var old_moduleMethod = my.moduleMethod;
+
+      my.moduleMethod = function () {
+        // method override, has access to old through old_moduleMethod...
+      };
 
       return my;
     }(MODULE));
 
-  - loose augmentation: when we create flexible multi-part modules that can load themselves in any order
-    - limitation: you can't override module properties safely. also can't use module properties from other files during initialization
-      var MODULE = (function(my) {
-        // add capabilities
+- cloning and inheritance
+  - the least flexible, but does allow some neat compositions (example exluded)
+- cross-file private state
+  - a severe limitation is that each file maintains its own private state with no access to other private state
+  - ^this can be fixed by setting properties on their local variable _private, which will be immediately available to the others
+    var MODULE = (function(my) {
+      var _private = my._private = my._private || {},
+          _seal = my._seal = my._seal || function () {
+            delete my._private;
+            delete my._seal,
+            delete my._unseal,
+          },
+          _unseal = my._unseal = my._unseal || function () {
+            my._private = _private;
+            my.seal = seal;
+            my.unseal = unseal;
+          };
+      // permanent access to _private, _seal, and _unseal
 
-        return my;
-      }(MODULE || {}));
+      return my;
+    }(MODULE || {}));
 
-  - tight augmentation: implies a set loading order, but allows overrides. here's a simple augmentation:
-      var MODULE = (function (my) {
-        var old_moduleMethod = my.moduleMethod;
+- submodules - the simplest, and is like creating regular modules:
+    MODULE.sub = (function () {
+      var my = {};
+      // ...
 
-        my.moduleMethod = function () {
-          // method override, has access to old through old_moduleMethod...
-        };
+      return my;
+    }());
 
-        return my;
-      }(MODULE));
+- emulate private method w/closure example:
+  - the shared lexical environment is created in the body of an anonymous function, which is executed as soon at it has been defined, aka IIFE
 
-  - cloning and inheritance
-    - the least flexible, but does allow some neat compositions (example exluded)
-  - cross-file private state
-    - a severe limitation is that each file maintains its own private state with no access to other private state
-    - ^this can be fixed by setting properties on their local variable _private, which will be immediately available to the others
-      var MODULE = (function(my) {
-        var _private = my._private = my._private || {},
-            _seal = my._seal = my._seal || function () {
-              delete my._private;
-              delete my._seal,
-              delete my._unseal,
-            },
-            _unseal = my._unseal = my._unseal || function () {
-              my._private = _private;
-              my.seal = seal;
-              my.unseal = unseal;
-            };
-        // permanent access to _private, _seal, and _unseal
+    var counter = (function() {
+      var privateCounter = 0;
+      function changeBy(val) {
+        privateCounter += val;
+      }
 
-        return my;
-      }(MODULE || {}));
+      return {
+        increment: function() {
+          changeBy(1);
+        },
 
-  - submodules - the simplest, and is like creating regular modules:
-      MODULE.sub = (function () {
-        var my = {};
-        // ...
+        decrement: function() {
+          changeBy(-1);
+        },
 
-        return my;
-      }());
-
-  - emulate private method w/closure example:
-    - the shared lexical environment is created in the body of an anonymous function, which is executed as soon at it has been defined, aka IIFE
-
-      var counter = (function() {
-        var privateCounter = 0;
-        function changeBy(val) {
-          privateCounter += val;
+        value: function() {
+          return privateCounter;
         }
+      };
+    })();
 
-        return {
-          increment: function() {
-            changeBy(1);
-          },
+Prototypes
+- the mechanism by which JS objects inherit features from one another
+- if you define a basic Person constructor and create an instance, that instance's prototype will be Person, and that's prototype will be Object
+- methods/properties are NOT copied from one object to another. they're accessed by walking up the chain
+- with ES6, you can now access the prototype indirectly with Object.getPrototypeOf(obj)
+- objInstance.constructor points to the original constructor function
+- modifying prototypes will dynamically update the whole inheritance chain
 
-          decrement: function() {
-            changeBy(-1);
-          },
+Inheritance
+- prototypal
+- to provide inheritance, objects can have a prototype object, which acts as a template object that it inherits methods/properties from
+  - an object's prototype may also have a prototype object, which it inherits methods/properties from, and so on
+- Object.call(this, parm1, etc) allows you to call a function defined somewhere else, but in the current context
+  - the Object being called will 'pass' its properties to the current context. in other words, properties will be inherited from Object
+  - doing this will however not include the methods of the Person constructor's prototype. (assuming Teacher is other)
+  - we need to get the obj (Teacher) to inherit the methods defined on Person's prototype. do this with .create:
 
-          value: function() {
-            return privateCounter;
-          }
+    Teacher.prototype = Object.create(Person.prototype);     ----this will leave the property constructor equal to Person
+     --- to set this right, add:
+    Object.defineProperty(Teacher.prototype, 'constructor', {
+      value: Teacher,
+      enumerable: false, // so it doesn't appear in 'for in' loop
+      writeable: true
+    });
+- inheritance with class syntax
+  - create a subclass using the extends keyword:
+      class Teacher extends Person {...}
+  - however, you'll have to call the parent constructor with the super() operator. simply add inside constructor:
+
+      class Teacher extends Person {
+        constructor(subject, grade) {
+          super(); // now 'this' is initialized by calling the parent constructor
+          this.subject = subject;
+          this.grade = grade;
+        }
+      }  // pass parms to super if required by parent (Person)
+
+  - TODO: finish
+- Summary of methods for extending the prototype chain
+1. new initialization ex: let b = new Foo();
+  - warning: a misfeature that's often used is to extend Object.prototype or another built-in prototype (monkey patching, -break encapsulation)
+  - pros: supported in all browsers and is very fast and standard
+  - cons: to use, the function must be intialized. during init, the constructor may store unique info that must be generated per-object -this info would only be generated once, potentially leading to problems
+    - the init of the constructor may put unwanted methods onto the object (both cons are generally not problems in practice)
+2. Object.create
+  - pros: supported in all modern browsers. allows direct setting of __proto__ in a way that is a single event, which permits the browser to optimize the object
+  - cons: not supported in IE8 and below. slow object initialization can be a performance issue is using the second argument
+3. Object.setPrototypeOf
+  - pros: supported in all modern browsers. allows the dynamic manipulation of an object's prototype and can even force a prototype on a prototype-less object created with Object.create(null)
+  - cons: ill-performing (should be deprecated)
+4. supported in all modern browsers.
+  - pros: setting __proto__ to something that isn't an object only fails silently (no exception thrown)
+  - cons: non-performant and decprecated. many browsers optimize the prototypeand try to guess the location of the method in the memory when calling an instance in advance. setting __proto__ disrupts that
+
+Asynchronous JS
+- two main types of asynchronous code style is callbacks and Promises
+- be aware: you can't include an async code block that returns a result, which you then rely on later in a sync code block
+- promises vs callbacks
+  - promises are essentially a returned object to which you attach callback functions, rather than having to pass callbacks into a function
+  - essentially an object that representsan intermediate state of an operation. there's no guarantee when the result will be available
+  - promises are specifically made for handling async operations, and have some advantages:
+    - you can chain multiple async operations together w/multiple .then() operations
+    - they're always called in the strict order they are placed in the event queue
+    - error handling is better. they can be handled with a single .catch() block, rather than one for each level
+    - avoid inversion of control. callbacks lose full control of how the function will be executed when passing a callback to a third-party library
+- callbacks
+  - functions that are specified as arguments when calling a function which will start executing code in the background. when the background code finishes running, it calls the callback to let you know it's done
+    - example of async callback: 2nd param of .addEventListener()
+  - real world example using XMLHttpRequest to fetch a resource
+
+      function loadAsset(url, type, callback) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.responseType = type;
+
+        xhr.onload = function() {
+          callback(xhr.response);
         };
-      })();
 
-3. Inheritance
+        xhr.send();
+      }
 
-4. Promises
+      function displayImage(blob) {
+        let objectURL = URL.createObjectURL(blob);
 
-5. HTTP
+        let image = document.createElement('img');
+        image.src = objectURL;
+        document.body.appendChild(image);
+      }
+
+      loadAsset('coffee.jpg', 'blob', displayImage);
+  - note that not all callbacks are asynchronous. take .forEach for example. the callback passed is executed immediately
+- Promises
+  - a new style of async code used in modern Web APIs, like fetch() API -modern more efficient version of XHR
+  - a promise is an object representing the completion or failure of the async operation. it represents an intermediate state
+  - at their most basic, they're similar to event listeners
+    - a promise can only succeed or fail once. it can't succeed/fail twice and can't switch from success to failure or vice versa
+    - if succeeded or failed and you later add a success/failure callback, the correct callback will be called, even though the event took place earlier
